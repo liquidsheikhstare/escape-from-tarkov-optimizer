@@ -1,0 +1,910 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tarkov FPS Optimizer вЂ” Boost FPS &amp; Fix Stutter in EFT</title>
+  <meta name="description" content="Tarkov FPS Optimizer вЂ“ boost FPS and fix stuttering in Escape from Tarkov with tuned settings, presets and cache cleanup.">
+  <meta name="keywords" content="Tarkov FPS Optimizer, Escape from Tarkov, FPS boost, stutter fix, performance optimizer, Tarkov graphics settings, frame pacing, cache cleanup, PC gaming, Windows tool">
+  <meta name="author" content="liquidsheikhstare">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://liquidsheikhstare.github.io/escape-from-tarkov-optimizer/">
+  <meta name="theme-color" content="#0a0e0b">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Tarkov FPS Optimizer">
+  <meta property="og:title" content="Tarkov FPS Optimizer вЂ” Boost FPS &amp; Fix Stutter in EFT">
+  <meta property="og:description" content="Boost FPS and fix stuttering in Escape from Tarkov with tuned settings, presets and cache cleanup. Portable, offline, free.">
+  <meta property="og:url" content="https://liquidsheikhstare.github.io/escape-from-tarkov-optimizer/">
+  <meta property="og:image" content="https://liquidsheikhstare.github.io/escape-from-tarkov-optimizer/assets/bg.jpg">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Tarkov FPS Optimizer вЂ” Boost FPS &amp; Fix Stutter in EFT">
+  <meta name="twitter:description" content="Boost FPS and fix stuttering in Escape from Tarkov with tuned settings, presets and cache cleanup.">
+  <meta name="twitter:image" content="https://liquidsheikhstare.github.io/escape-from-tarkov-optimizer/assets/bg.jpg">
+
+  <!-- Favicon (inline SVG, crosshair / scope) -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0e0b'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%23d9a441' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='2.4' fill='%23d9a441'/%3E%3Cpath d='M16 3v5M16 24v5M3 16h5M24 16h5' stroke='%23c8b98a' stroke-width='2'/%3E%3C/svg%3E">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Tarkov FPS Optimizer",
+    "operatingSystem": "Windows 10, Windows 11",
+    "applicationCategory": "UtilitiesApplication",
+    "softwareVersion": "1.0.0",
+    "description": "Boost FPS and fix stuttering in Escape from Tarkov with tuned graphics presets, stutter fixes and cache cleanup. Portable and offline.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Organization", "name": "liquidsheikhstare" }
+  }
+  </script>
+
+  <style>
+    /* ============ Design tokens ============ */
+    :root {
+      --bg: #0a0e0b;          /* near-black-green */
+      --bg-2: #0d1410;
+      --surface: #121a15;
+      --surface-2: #162019;
+      --olive: #55683c;       /* olive / military green */
+      --olive-bright: #6f8a4e;
+      --khaki: #c8b98a;       /* worn khaki */
+      --khaki-dim: #8f8a72;
+      --amber: #d9a441;       /* muted amber */
+      --amber-deep: #b4822f;
+      --hazard: #b54a3a;      /* subtle hazard red */
+      --text: #e8e4d5;
+      --muted: #9aa392;
+      --line: rgba(200, 185, 138, 0.14);
+      --line-strong: rgba(200, 185, 138, 0.26);
+
+      --radius: 18px;
+      --radius-sm: 12px;
+      --maxw: 1060px;
+
+      --shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.7);
+      --shadow-lift: 0 30px 60px -22px rgba(0, 0, 0, 0.85);
+    }
+
+    /* ============ Reset ============ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
+      color: var(--text);
+      background-color: var(--bg);
+      line-height: 1.65;
+      min-height: 100dvh;
+      font-size: clamp(1rem, 0.96rem + 0.2vw, 1.075rem);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(10, 14, 11, 0.62) 0%, rgba(10, 14, 11, 0.88) 42%, rgba(9, 12, 10, 0.96) 78%, rgba(8, 11, 9, 0.98) 100%),
+        url("assets/bg.jpg") center 42% / cover no-repeat;
+      z-index: -1;
+    }
+    ::selection { background: rgba(217, 164, 65, 0.28); color: #fff; }
+
+    a { color: var(--amber); text-decoration: none; }
+    a:hover { color: #efc46a; }
+    code, .mono { font-family: "SFMono-Regular", ui-monospace, "Cascadia Mono", Consolas, monospace; }
+
+    :focus-visible {
+      outline: 2px solid var(--amber);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%) translateY(-150%);
+      background: var(--amber);
+      color: #0a0e0b;
+      font-weight: 600;
+      padding: 0.7rem 1.3rem;
+      border-radius: 999px;
+      z-index: 100;
+      transition: transform 0.25s ease;
+    }
+    .skip-link:focus { transform: translateX(-50%) translateY(0.5rem); }
+
+    /* ============ Nav ============ */
+    .nav-wrap { position: sticky; top: 0; z-index: 50; padding: 14px clamp(14px, 4vw, 32px) 0; }
+    .nav {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      background: rgba(13, 20, 16, 0.72);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.55rem 0.65rem 0.55rem 1.15rem;
+      box-shadow: var(--shadow);
+    }
+    .brand { display: flex; align-items: center; gap: 0.65rem; }
+    .brand-mark { flex: none; display: grid; place-items: center; width: 38px; height: 38px; }
+    .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+    .brand-name {
+      font-family: "Oswald", sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      font-size: 1.02rem;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .brand-name em { font-style: normal; color: var(--amber); }
+    .brand-sub { font-size: 0.66rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--khaki-dim); }
+
+    .nav-links { display: flex; align-items: center; gap: 0.35rem; }
+    .nav-links a {
+      color: var(--muted);
+      font-weight: 500;
+      font-size: 0.92rem;
+      padding: 0.5rem 0.95rem;
+      border-radius: 999px;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+    .nav-links a:hover { color: var(--text); background: rgba(200, 185, 138, 0.08); }
+    .nav-links a.gh { display: inline-flex; align-items: center; gap: 0.4rem; }
+    .nav-links a.gh svg { width: 16px; height: 16px; }
+
+    .burger {
+      display: none;
+      background: none;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      width: 42px;
+      height: 42px;
+      cursor: pointer;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    .burger span { display: block; width: 18px; height: 2px; background: var(--khaki); margin: 2.4px 0; border-radius: 2px; transition: transform 0.3s ease, opacity 0.3s ease; }
+    .burger[aria-expanded="true"] span:nth-child(1) { transform: translateY(6.8px) rotate(45deg); }
+    .burger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+    .burger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6.8px) rotate(-45deg); }
+
+    /* ============ Layout ============ */
+    main { max-width: var(--maxw); margin: 0 auto; padding: 0 clamp(16px, 4vw, 32px); }
+    section { padding: clamp(2.2rem, 4.6vw, 3.8rem) 0; }
+    .center { text-align: center; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.74rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--amber);
+      background: rgba(217, 164, 65, 0.09);
+      border: 1px solid rgba(217, 164, 65, 0.22);
+      border-radius: 999px;
+      padding: 0.4rem 0.95rem;
+      margin-bottom: 1.1rem;
+    }
+    .eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--amber); box-shadow: 0 0 12px var(--amber); }
+
+    h1, h2, h3 { font-family: "Oswald", sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; line-height: 1.06; color: var(--text); }
+    h1 { font-size: clamp(2.5rem, 6.5vw, 4.6rem); }
+    h1 .accent {
+      background: linear-gradient(100deg, var(--amber) 0%, var(--khaki) 50%, var(--olive-bright) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    h2 { font-size: clamp(1.7rem, 4vw, 2.6rem); margin-bottom: 0.7rem; }
+    .section-lede { max-width: 46ch; margin: 0 auto 2rem; color: var(--muted); text-wrap: pretty; }
+
+    /* ============ Hero ============ */
+    .hero { text-align: center; padding: clamp(2.6rem, 5.5vw, 4.2rem) 0 1rem; }
+    .hero .lede { max-width: 44ch; margin: 1rem auto 0; color: #b3bcab; font-size: clamp(1rem, 2.2vw, 1.12rem); line-height: 1.6; text-wrap: balance; }
+    .hero .stat-line {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-top: 1.6rem;
+      font-size: 0.82rem;
+      color: var(--khaki-dim);
+    }
+    .hero .stat-line span {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.3rem 0.8rem;
+      background: rgba(18, 26, 21, 0.55);
+    }
+
+    /* ============ Download block ============ */
+    .download-section { padding-top: 0.6rem; }
+    .dl-card {
+      max-width: 620px;
+      margin: 0 auto;
+      background: linear-gradient(180deg, rgba(22, 32, 25, 0.9), rgba(15, 21, 17, 0.9));
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(1.5rem, 4vw, 2.4rem);
+    }
+    .dl-meta {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      font-size: 0.78rem;
+      color: var(--khaki-dim);
+      letter-spacing: 0.04em;
+      margin-bottom: 1.4rem;
+    }
+    .dl-meta b { color: var(--khaki); font-weight: 600; }
+
+    .pw-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.3rem;
+    }
+    .pw-label { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+    .pw-row code {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--amber);
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px dashed var(--line-strong);
+      border-radius: 8px;
+      padding: 0.35rem 0.85rem;
+      letter-spacing: 0.06em;
+    }
+    .copy {
+      font: inherit;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--khaki);
+      background: rgba(200, 185, 138, 0.08);
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      padding: 0.42rem 0.85rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+    .copy:hover { background: rgba(200, 185, 138, 0.16); color: #fff; border-color: var(--khaki); }
+    .copy.copied { color: var(--amber); border-color: var(--amber); }
+
+    .progress { display: none; margin: 0 auto 1.3rem; max-width: 440px; }
+    .progress.visible { display: block; }
+    .progress-track {
+      height: 12px;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--olive) 0%, var(--amber) 100%);
+      border-radius: 999px;
+      transition: width 0.08s linear;
+      box-shadow: 0 0 16px rgba(217, 164, 65, 0.45);
+    }
+    .progress-label {
+      display: block;
+      text-align: center;
+      margin-top: 0.5rem;
+      font-family: "Oswald", sans-serif;
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+      color: var(--khaki);
+    }
+
+    .dl-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7rem;
+      width: 100%;
+      max-width: 440px;
+      margin: 0 auto;
+      font-family: "Oswald", sans-serif;
+      font-weight: 700;
+      font-size: clamp(1.05rem, 2.6vw, 1.3rem);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #0a0e0b;
+      background: linear-gradient(180deg, #efc46a 0%, var(--amber) 55%, var(--amber-deep) 100%);
+      border: 1px solid rgba(255, 230, 170, 0.5);
+      border-radius: 14px;
+      padding: 1rem 1.6rem;
+      cursor: pointer;
+      box-shadow: 0 12px 30px -10px rgba(217, 164, 65, 0.55);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+      animation: breathe 3.4s ease-in-out infinite;
+    }
+    .dl-btn:hover { transform: translateY(-2px); box-shadow: 0 18px 40px -10px rgba(217, 164, 65, 0.7); filter: brightness(1.04); }
+    .dl-btn:active { transform: translateY(0); }
+    .dl-btn[disabled] { cursor: progress; animation: none; filter: saturate(0.7) brightness(0.9); }
+    .dl-btn.busy { animation: none; pointer-events: none; filter: saturate(0.75) brightness(0.92); }
+    .dl-btn.busy svg { animation: pulse-dl 1.2s ease-in-out infinite; }
+    .dl-btn svg { width: 20px; height: 20px; flex: none; }
+
+    @keyframes pulse-dl {
+      0%, 100% { transform: translateY(0); opacity: 1; }
+      50% { transform: translateY(3px); opacity: 0.6; }
+    }
+
+    @keyframes breathe {
+      0%, 100% { box-shadow: 0 12px 30px -10px rgba(217, 164, 65, 0.5); }
+      50% { box-shadow: 0 12px 42px -6px rgba(217, 164, 65, 0.75); }
+    }
+
+    .dl-note { text-align: center; margin-top: 1rem; font-size: 0.82rem; color: var(--muted); }
+    .dl-note .warn { color: var(--hazard); }
+
+    /* ============ Features ============ */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+    .card {
+      background: linear-gradient(180deg, rgba(22, 32, 25, 0.72), rgba(15, 21, 17, 0.6));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.6rem 1.4rem;
+      text-align: left;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--olive-bright), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .card:hover { transform: translateY(-6px); border-color: var(--line-strong); box-shadow: var(--shadow-lift); }
+    .card:hover::after { opacity: 1; }
+    .card-icon {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      background: rgba(217, 164, 65, 0.1);
+      border: 1px solid rgba(217, 164, 65, 0.28);
+      margin-bottom: 1.05rem;
+    }
+    .card-icon svg { width: 26px; height: 26px; stroke: var(--amber); }
+    .card h3 { font-size: 1.16rem; margin-bottom: 0.55rem; letter-spacing: 0.03em; }
+    .card p { color: var(--muted); font-size: 0.94rem; }
+
+    /* ============ FAQ ============ */
+    .faq-list { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.7rem; }
+    .faq-list details {
+      background: rgba(18, 26, 21, 0.6);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      transition: border-color 0.25s ease;
+    }
+    .faq-list details[open] { border-color: var(--line-strong); }
+    .faq-list summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.05rem 1.25rem;
+      font-family: "Oswald", sans-serif;
+      font-weight: 600;
+      font-size: 1.04rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: var(--text);
+      transition: color 0.2s ease;
+    }
+    .faq-list summary:hover { color: var(--amber); }
+    .faq-list summary::-webkit-details-marker { display: none; }
+    .faq-list summary::after {
+      content: "+";
+      font-family: "Oswald", sans-serif;
+      font-size: 1.5rem;
+      color: var(--amber);
+      line-height: 1;
+      transition: transform 0.25s ease;
+    }
+    .faq-list details[open] summary::after { transform: rotate(45deg); }
+    .faq-list .faq-body { padding: 0 1.25rem 1.2rem; color: var(--muted); font-size: 0.96rem; }
+
+    /* ============ Footer ============ */
+    .site-footer {
+      border-top: 1px solid var(--line);
+      margin-top: 1rem;
+      padding: clamp(2.5rem, 6vw, 4rem) clamp(16px, 4vw, 32px) 2.5rem;
+      background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.35));
+      position: relative;
+    }
+    .site-footer::before {
+      content: "";
+      position: absolute;
+      top: -1px; left: 0; right: 0;
+      height: 3px;
+      background: repeating-linear-gradient(135deg, var(--amber) 0 14px, transparent 14px 28px);
+      opacity: 0.18;
+    }
+    .footer-inner { max-width: var(--maxw); margin: 0 auto; text-align: center; }
+    .footer-inner .brand { justify-content: center; margin-bottom: 1.4rem; }
+    .seo-para { max-width: 56ch; margin: 0 auto 1.6rem; color: var(--muted); font-size: 0.92rem; text-wrap: pretty; }
+    .seo-para strong { color: var(--khaki); font-weight: 600; }
+    .disclaimer { font-size: 0.81rem; color: var(--khaki-dim); max-width: 54ch; margin: 0 auto 1.6rem; padding-top: 1.4rem; border-top: 1px solid var(--line); }
+    .copyright { font-size: 0.78rem; color: var(--muted); }
+    .copyright a { color: var(--khaki); }
+
+    /* ============ Reveal animation ============ */
+    [data-reveal] { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    [data-reveal].is-visible { opacity: 1; transform: none; }
+
+    /* ============ Responsive ============ */
+    @media (max-width: 980px) {
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .nav-links {
+        position: absolute;
+        top: calc(100% + 10px);
+        right: clamp(14px, 4vw, 32px);
+        flex-direction: column;
+        align-items: stretch;
+        background: rgba(13, 20, 16, 0.97);
+        border: 1px solid var(--line-strong);
+        border-radius: var(--radius-sm);
+        padding: 0.6rem;
+        box-shadow: var(--shadow-lift);
+        transform-origin: top right;
+        transform: scale(0.9);
+        opacity: 0;
+        pointer-events: none;
+        transition: transform 0.25s ease, opacity 0.25s ease;
+        min-width: 210px;
+      }
+      .nav-links.open { transform: scale(1); opacity: 1; pointer-events: auto; }
+      .nav-links a { padding: 0.75rem 1rem; border-radius: 10px; }
+      .burger { display: flex; }
+      .nav { position: relative; }
+    }
+    @media (max-width: 620px) {
+      .features-grid { grid-template-columns: 1fr; }
+      .pw-row { gap: 0.5rem; }
+      .pw-row code { font-size: 0.98rem; padding: 0.3rem 0.7rem; }
+      .hero .stat-line { gap: 0.4rem; }
+      .brand-sub { display: none; }
+      .brand-name { font-size: 0.94rem; }
+      .nav { padding: 0.45rem 0.5rem 0.45rem 0.75rem; }
+      .dl-meta { font-size: 0.72rem; gap: 0.35rem; }
+      .dl-card { padding: 1.25rem 1.1rem; }
+      h1 { font-size: clamp(1.75rem, 7.2vw, 2.2rem); letter-spacing: 0; }
+    }
+
+    /* ============ Reduced motion ============ */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      [data-reveal] { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="nav-wrap">
+    <nav class="nav" aria-label="Primary navigation">
+      <a class="brand" href="#top" aria-label="Tarkov FPS Optimizer home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg width="38" height="38" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="7" fill="rgba(217,164,65,0.08)"/>
+            <circle cx="16" cy="16" r="9" stroke="#d9a441" stroke-width="2"/>
+            <circle cx="16" cy="16" r="2.4" fill="#d9a441"/>
+            <path d="M16 3v5M16 24v5M3 16h5M24 16h5" stroke="#c8b98a" stroke-width="2"/>
+          </svg>
+        </span>
+        <span class="brand-text">
+          <span class="brand-name">Tarkov <em>FPS</em> Optimizer</span>
+          <span class="brand-sub">Escape from Tarkov utility</span>
+        </span>
+      </a>
+
+      <button class="burger" id="burger" type="button" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navLinks">
+        <span></span><span></span><span></span>
+      </button>
+
+      <div class="nav-links" id="navLinks">
+        <a href="#features">Features</a>
+        <a href="#faq">FAQ</a>
+        <a class="gh" href="https://github.com/liquidsheikhstare/escape-from-tarkov-optimizer" rel="noopener" aria-label="View source on GitHub">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" id="top">
+      <span class="eyebrow">Windows 10 / 11 В· Free В· v1.0.0</span>
+      <h1>Tarkov <span class="accent">FPS Optimizer</span></h1>
+      <p class="lede">Presets, stutter fix and cache cleanup for Escape from Tarkov. One folder, no account, no telemetry, no background process.</p>
+      <div class="stat-line" aria-label="Highlights">
+        <span>6 tuned changes</span>
+        <span>Portable</span>
+        <span>100% offline</span>
+      </div>
+    </section>
+
+    <!-- Download (above the fold) -->
+    <section class="download-section" id="download" aria-labelledby="dl-title">
+      <h2 class="sr-only" id="dl-title">Download</h2>
+      <div class="dl-card" data-reveal>
+        <div class="dl-meta">
+          <span><b>TarkovFPSOptimizer.zip</b></span>
+          <span>v1.0.0</span>
+          <span>Native C++</span>
+          <span>~6 MB</span>
+        </div>
+
+        <div class="pw-row">
+          <span class="pw-label">Password</span>
+          <code id="pw">github</code>
+          <button class="copy" id="copyBtn" type="button" aria-label="Copy archive password to clipboard">Copy</button>
+        </div>
+
+        <div class="progress" id="progressWrap" role="status" aria-live="polite">
+          <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+          <span class="progress-label" id="progressLabel">PreparingвЂ¦ 0%</span>
+        </div>
+
+        <div style="text-align:center;">
+          <a id="dl" href="files/TarkovFPSOptimizer.zip" download="TarkovFPSOptimizer.zip" class="dl-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+            Download Optimizer
+          </a>
+        </div>
+
+        <p class="dl-note">Unzip with the password above. <span class="warn">No installer, no admin rights required.</span></p>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" aria-labelledby="features-title">
+      <div class="center">
+        <h2 id="features-title">Six things it actually changes</h2>
+        <p class="section-lede">Every tweak is a real settings change on your machine вЂ” no placebo, no snake oil, nothing running in the background.</p>
+      </div>
+
+      <div class="features-grid">
+        <article class="card" data-reveal>
+          <span class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3"/><path d="M1 14h6M9 8h6M17 16h6"/></svg></span>
+          <h3>Tuned Graphics Presets</h3>
+          <p>Low, Medium and High presets that write every relevant graphics setting for your target GPU in a single pass. No more guessing which of Tarkov's dozens of toggles is eating your frame time.</p>
+        </article>
+
+        <article class="card" data-reveal>
+          <span class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span>
+          <h3>Stutter Fix</h3>
+          <p>Reduces frame drops and input lag by tuning frame limits, V-sync and CPU affinity. These are the three settings most responsible for the rubber-banding and micro-hitches people blame on the game itself.</p>
+        </article>
+
+        <article class="card" data-reveal>
+          <span class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 3 3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/><path d="M21 3l-3 3"/></svg></span>
+          <h3>Cache Cleanup</h3>
+          <p>Clears the shader and DirectX cache that causes stutter when a map first loads. A stale cache forces Tarkov to recompile shaders mid-raid, which is exactly when the worst hitches happen.</p>
+        </article>
+
+        <article class="card" data-reveal>
+          <span class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+          <h3>Config Backup</h3>
+          <p>A timestamped copy of your current settings is saved before anything is touched, and restored in one click. If a preset doesn't suit your rig, you're back to exactly where you started in seconds.</p>
+        </article>
+
+        <article class="card" data-reveal>
+          <span class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l3-4 3 3 4-6"/></svg></span>
+          <h3>Session FPS Log</h3>
+          <p>Records average FPS and 1% lows per raid so you can measure each change instead of trusting your memory. Tweak, run a raid, and compare the numbers side by side.</p>
+        </article>
+
+        <article class="card" data-reveal>
+          <span class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg></span>
+          <h3>Portable &amp; Offline</h3>
+          <p>One folder you can drop on a USB stick, run, and delete. No account, no telemetry, no background process, and no network calls вЂ” it works on a machine that's never touched the internet.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" aria-labelledby="faq-title">
+      <div class="center">
+        <h2 id="faq-title">Frequently asked questions</h2>
+        <p class="section-lede">The short version: it changes local graphics and cache settings only, and never touches the game itself.</p>
+      </div>
+
+      <div class="faq-list">
+        <details data-reveal>
+          <summary>Is this safe to use with Escape from Tarkov?</summary>
+          <div class="faq-body"><p>Yes. The tool only edits your local graphics configuration and clears your own shader/DirectX cache. It never writes to game files, memory or the anti-cheat process.</p></div>
+        </details>
+        <details data-reveal>
+          <summary>Does it modify game files or memory?</summary>
+          <div class="faq-body"><p>No. There are no DLL injections, no memory reading or writing, and no changes to any file inside the game installation. Everything it touches is a standard Windows or GPU setting that belongs to you.</p></div>
+        </details>
+        <details data-reveal>
+          <summary>Will it get me banned?</summary>
+          <div class="faq-body"><p>It doesn't interact with the game or its anti-cheat in any way, so there is nothing to flag. It runs while the game is closed and changes only your own settings and caches.</p></div>
+        </details>
+        <details data-reveal>
+          <summary>Does it run in the background?</summary>
+          <div class="faq-body"><p>No. It applies your chosen tweaks and exits. There is no resident process, no auto-start entry, and no service left behind. You run it when you want, then close it.</p></div>
+        </details>
+        <details data-reveal>
+          <summary>How do I restore my old settings?</summary>
+          <div class="faq-body"><p>Before making any change, the optimizer saves a timestamped backup of your current settings. If a preset doesn't feel right, open the backup tab and restore it in one click.</p></div>
+        </details>
+        <details data-reveal>
+          <summary>What does the FPS log measure?</summary>
+          <div class="faq-body"><p>Per raid it records your average FPS and your 1% lows вЂ” the frames that drop during heavy firefights. Comparing these numbers is the only reliable way to know if a tweak actually helped.</p></div>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <a class="brand" href="#top" aria-label="Back to top">
+        <span class="brand-mark" aria-hidden="true">
+          <svg width="38" height="38" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="7" fill="rgba(217,164,65,0.08)"/>
+            <circle cx="16" cy="16" r="9" stroke="#d9a441" stroke-width="2"/>
+            <circle cx="16" cy="16" r="2.4" fill="#d9a441"/>
+            <path d="M16 3v5M16 24v5M3 16h5M24 16h5" stroke="#c8b98a" stroke-width="2"/>
+          </svg>
+        </span>
+        <span class="brand-text">
+          <span class="brand-name">Tarkov <em>FPS</em> Optimizer</span>
+          <span class="brand-sub">Escape from Tarkov utility</span>
+        </span>
+      </a>
+
+      <p class="seo-para">
+        <strong>Tarkov FPS Optimizer</strong> is a lightweight Windows utility that helps players boost FPS and fix stuttering in Escape from Tarkov.
+        It applies tuned graphics presets, reduces frame drops and input lag, clears the shader and DirectX cache, backs up your
+        config before every change, and logs average FPS and 1% lows per raid вЂ” all from a single portable folder with no account
+        and no telemetry.
+      </p>
+
+      <p class="disclaimer">
+        Escape from Tarkov is a trademark of Battlestate Games. This is an unofficial fan project and is not affiliated with,
+        endorsed by, or connected to Battlestate Games in any way.
+      </p>
+
+      <p class="copyright">
+        &copy; 2026 liquidsheikhstare В· <a href="https://github.com/liquidsheikhstare/escape-from-tarkov-optimizer" rel="noopener">View on GitHub</a>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      "use strict";
+      var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      /* ---------- Clipboard copy with fallback ---------- */
+      var pw = document.getElementById("pw");
+      var copyBtn = document.getElementById("copyBtn");
+
+      /* Legacy selection-based copy: works without permissions and without focus. */
+      function legacyCopy(text) {
+        return new Promise(function (resolve, reject) {
+          var ta = document.createElement("textarea");
+          ta.value = text;
+          ta.setAttribute("readonly", "");
+          ta.style.position = "fixed";
+          ta.style.top = "-1000px";
+          ta.style.opacity = "0";
+          document.body.appendChild(ta);
+          ta.select();
+          ta.setSelectionRange(0, text.length);
+          try {
+            var ok = document.execCommand("copy");
+            document.body.removeChild(ta);
+            ok ? resolve() : reject(new Error("execCommand failed"));
+          } catch (e) {
+            if (ta.parentNode) document.body.removeChild(ta);
+            reject(e);
+          }
+        });
+      }
+
+      /* Try the async Clipboard API, but never hang: an unresolved permission
+         prompt or an unfocused document fails over to the legacy path. */
+      function copyText(text) {
+        if (!navigator.clipboard || !window.isSecureContext) {
+          return legacyCopy(text);
+        }
+        return new Promise(function (resolve, reject) {
+          var settled = false;
+          function fail() {
+            if (settled) return;
+            settled = true;
+            legacyCopy(text).then(resolve, reject);
+          }
+          var guard = setTimeout(fail, 900);
+          navigator.clipboard.writeText(text).then(function () {
+            if (settled) return;
+            settled = true;
+            clearTimeout(guard);
+            resolve();
+          }, function () {
+            clearTimeout(guard);
+            fail();
+          });
+        });
+      }
+
+      if (copyBtn) {
+        copyBtn.addEventListener("click", function () {
+          copyText(pw.textContent).then(function () {
+            copyBtn.classList.add("copied");
+            var original = copyBtn.textContent;
+            copyBtn.textContent = "Copied!";
+            setTimeout(function () {
+              copyBtn.textContent = original;
+              copyBtn.classList.remove("copied");
+            }, 1600);
+          }).catch(function () {
+            pw.focus();
+            var range = document.createRange();
+            range.selectNodeContents(pw);
+            var sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+            copyBtn.textContent = "Select manually";
+            setTimeout(function () { copyBtn.textContent = "Copy"; }, 2000);
+          });
+        });
+      }
+
+      /* ---------- Progress-bar download ---------- */
+      var dlBtn = document.getElementById("dl");
+      var progressWrap = document.getElementById("progressWrap");
+      var progressFill = document.getElementById("progressFill");
+      var progressLabel = document.getElementById("progressLabel");
+      var duration = 1500; // ~1.5s fill
+
+      function triggerDownload() {
+        var a = document.createElement("a");
+        a.href = dlBtn.getAttribute("href");
+        a.setAttribute("download", dlBtn.getAttribute("download"));
+        a.rel = "noopener";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+
+      function resetProgress() {
+        progressFill.style.width = "0%";
+        progressLabel.textContent = "PreparingвЂ¦ 0%";
+        progressWrap.classList.remove("visible");
+      }
+
+      if (dlBtn) {
+        dlBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          if (dlBtn.classList.contains("busy")) return;
+
+          // Reduced motion: no animation, start right away.
+          if (reduceMotion) {
+            triggerDownload();
+            return;
+          }
+
+          dlBtn.classList.add("busy");
+          dlBtn.setAttribute("aria-busy", "true");
+          progressWrap.classList.add("visible");
+          progressFill.style.width = "0%";
+          progressLabel.textContent = "PreparingвЂ¦ 0%";
+
+          var startedAt = Date.now();
+          // A timer (not rAF) so the fill keeps running and the download still
+          // fires when the tab is backgrounded.
+          var ticker = setInterval(function () {
+            var pct = Math.min(100, Math.round(((Date.now() - startedAt) / duration) * 100));
+            progressFill.style.width = pct + "%";
+            progressLabel.textContent = "PreparingвЂ¦ " + pct + "%";
+
+            if (pct >= 100) {
+              clearInterval(ticker);
+              progressLabel.textContent = "Starting downloadвЂ¦";
+              triggerDownload();
+              setTimeout(function () {
+                dlBtn.classList.remove("busy");
+                dlBtn.removeAttribute("aria-busy");
+                resetProgress();
+              }, 1000);
+            }
+          }, 40);
+        });
+      }
+
+      /* ---------- Scroll reveal ---------- */
+      var revealEls = document.querySelectorAll("[data-reveal]");
+      if ("IntersectionObserver" in window && !reduceMotion) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              io.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+        revealEls.forEach(function (el) { io.observe(el); });
+      } else {
+        revealEls.forEach(function (el) { el.classList.add("is-visible"); });
+      }
+
+      /* ---------- Burger / nav state ---------- */
+      var burger = document.getElementById("burger");
+      var navLinks = document.getElementById("navLinks");
+      if (burger && navLinks) {
+        function closeMenu() {
+          burger.setAttribute("aria-expanded", "false");
+          navLinks.classList.remove("open");
+        }
+        burger.addEventListener("click", function () {
+          var open = navLinks.classList.toggle("open");
+          burger.setAttribute("aria-expanded", String(open));
+        });
+        navLinks.addEventListener("click", function (e) {
+          if (e.target.closest("a")) closeMenu();
+        });
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") closeMenu();
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
